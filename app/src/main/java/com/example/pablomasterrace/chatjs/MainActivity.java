@@ -130,34 +130,8 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+
     Map<String, String> headers = new HashMap<>();
-
-    public void introduceNombre(){
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("Hola usuario");
-        alert.setMessage("Escribe tu nombre de usuario:");
-
-        final EditText input = new EditText(this);
-        alert.setView(input);
-
-        alert.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                id = input.getEditableText().toString();
-                connectWebSocket();
-            }
-        });
-
-        alert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-        alert.create();
-        alert.show();
-    }
-
 
     public String recibir() throws JSONException {
         clienteEnvia = new JSONObject();
@@ -235,7 +209,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+            connectWebSocket();
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
