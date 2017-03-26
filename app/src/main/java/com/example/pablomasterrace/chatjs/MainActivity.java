@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
             }
         });
 
@@ -75,98 +76,6 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-    }
-
-    private void connectWebSocket() {
-        URI uri;
-        try {
-            uri = new URI("ws://proyecto-pmdm-ylagorebollar.c9users.io:8081");
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        Map<String, String> headers = new HashMap<>();
-        mWebSocketClient = new WebSocketClient(uri, new Draft_17(), headers, 0) {
-
-            @Override
-            public void onOpen(ServerHandshake serverHandshake) {
-                Log.i("Websocket", "Opened");
-                // mWebSocketClient.send("Hello from " + id );
-            }
-
-            /**
-             * Muestra todos los mensajes en el TextView
-             * @param s
-             */
-            @Override
-            public void onMessage(String s) {
-                final String message = s;
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        TextView textView = (TextView)findViewById(R.id.messages);
-                        try {
-                            textView.append(recibir() + "\n" + message);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-            }
-
-            @Override
-            public void onClose(int i, String s, boolean b) {
-                Log.i("Websocket", "Closed " + s);
-            }
-
-            @Override
-            public void onError(Exception e) {
-                Log.i("Websocket", "Error " + e.getMessage());
-            }
-        };
-
-        mWebSocketClient.connect();
-    }
-
-
-
-    Map<String, String> headers = new HashMap<>();
-
-    public String recibir() throws JSONException {
-        clienteEnvia = new JSONObject();
-        id = clienteRecibe.getString("id");
-        getMensaje = clienteRecibe.getString("mensaje");
-        checkBox = clienteRecibe.getString("privado");
-        dest = clienteRecibe.getString("destinatario");
-
-        String mensaje = id + getMensaje + checkBox + dest;
-        return mensaje;
-    }
-
-    public String enviar(){
-        clienteRecibe = new JSONObject();
-        mensaje = (EditText)findViewById(R.id.message);
-        destinatario = (EditText)findViewById(R.id.userDest);
-        check = (CheckBox)findViewById(R.id.smsPrivado);
-        checkBox = check.isChecked() ? "true" : "false";
-        getMensaje = mensaje.getText().toString();
-        dest = destinatario.getText().toString();
-        try{
-            clienteRecibe.put("id", id);
-            clienteRecibe.put("mensaje", getMensaje);
-            clienteRecibe.put("privado", check);
-            clienteRecibe.put("destinatario", dest);
-        }catch (JSONException e){}
-
-        String sms = clienteRecibe.toString();
-        return sms;
-    }
-
-    public void sendMessage(View btn) {
-        mWebSocketClient.send(enviar());
-        mensaje.setText("");
-        destinatario.setText("");
     }
 
 
@@ -205,25 +114,118 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_user) {
             connectWebSocket();
         } else if (id == R.id.nav_gallery) {
-
+            connectWebSocket();
         } else if (id == R.id.nav_slideshow) {
-
+            connectWebSocket();
         } else if (id == R.id.nav_manage) {
-
+            connectWebSocket();
         } else if (id == R.id.nav_share) {
-
+            connectWebSocket();
         } else if (id == R.id.nav_send) {
-
+            connectWebSocket();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private void connectWebSocket() {
+        URI uri;
+        try {
+            uri = new URI("ws://androidproject-pablovandam2.c9users.io:8081");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        Map<String, String> headers = new HashMap<>();
+        mWebSocketClient = new WebSocketClient(uri, new Draft_17(), headers, 0) {
+
+            @Override
+            public void onOpen(ServerHandshake serverHandshake) {
+                Log.i("Websocket", "Opened");
+
+            }
+
+            @Override
+            public void onMessage(String s) {
+                final String message = s;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        TextView textView = (TextView)findViewById(R.id.messages);
+                        try {
+                            textView.append(recibir() + "\n" + message);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onClose(int i, String s, boolean b) {
+                Log.i("Websocket", "Closed " + s);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.i("Websocket", "Error " + e.getMessage());
+            }
+        };
+
+        mWebSocketClient.connect();
+    }
+
+
+    public String recibir() throws JSONException {
+        clienteEnvia = new JSONObject();
+        id = clienteRecibe.getString("id");
+        getMensaje = clienteRecibe.getString("mensaje");
+        checkBox = clienteRecibe.getString("privado");
+        dest = clienteRecibe.getString("destinatario");
+
+        String mensaje = id + getMensaje + checkBox + dest;
+        return mensaje;
+    }
+
+    public String enviar(){
+        clienteRecibe = new JSONObject();
+        mensaje = (EditText)findViewById(R.id.message);
+        destinatario = (EditText)findViewById(R.id.userDest);
+        check = (CheckBox)findViewById(R.id.smsPrivado);
+        checkBox = check.isChecked() ? "true" : "false";
+        getMensaje = mensaje.getText().toString();
+        dest = destinatario.getText().toString();
+        try{
+            clienteRecibe.put("id", id);
+            clienteRecibe.put("mensaje", getMensaje);
+            clienteRecibe.put("privado", check);
+            clienteRecibe.put("destinatario", dest);
+        }catch (JSONException e){}
+
+        String sms = clienteRecibe.toString();
+        return sms;
+    }
+
+    public void enviarMensaje(View btn) {
+        mWebSocketClient.send(enviar());
+        mensaje.setText("");
+        destinatario.setText("");
+    }
+
+
+
+
+
+
+
+
 }
